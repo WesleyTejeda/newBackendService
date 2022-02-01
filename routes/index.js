@@ -32,7 +32,10 @@ router.post('/signup', (req, res, next) => {
       userModel.create({username: req.body.username, 
         password: md5(req.body.password), 
         sessionID: crypto.randomBytes(32).toString('base64')}, (err, msg) => {
-        res.send(err ? err : msg);
+        res.send(err ? err : {
+          sessionID: msg.sessionID, 
+          username: msg.username
+        });
       });
     }else{
       res.send({err: "account already exists"})
