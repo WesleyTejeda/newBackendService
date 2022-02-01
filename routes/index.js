@@ -6,6 +6,7 @@ var Schema = mongoose.Schema;
 const md5 = require('md5');
 
 var crypto = require('crypto');
+const { maxHeaderSize } = require('http');
 
 var userSchema = new Schema ({
   username: String,
@@ -34,7 +35,8 @@ router.post('/signup', (req, res, next) => {
         sessionID: crypto.randomBytes(32).toString('base64')}, (err, msg) => {
         res.send(err ? err : {
           sessionID: msg.sessionID, 
-          username: msg.username
+          username: msg.username,
+          id: msg._id
         });
       });
     }else{
