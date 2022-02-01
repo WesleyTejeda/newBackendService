@@ -25,12 +25,21 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/signup', (req, res, next) => {
-  userModel.create({username: req.body.username, 
-    password: md5(req.body.password), 
-    sessionID: crypto.randomBytes(32).toString('base64')}, (err, msg) => {
-    res.send(err ? err : msg);
-  });
+  userModel.findOne({username: req.body.username}, "username", (err, acc) =>{
+    if(err)
+      return res.send(err)
+    if(!acc){
+      userModel.create({username: req.body.username, 
+        password: md5(req.body.password), 
+        sessionID: crypto.randomBytes(32).toString('base64')}, (err, msg) => {
+        res.send(err ? err : msg);
+      });
+    }else{
+      res.send("account already exists")
+    }
+  })
 });
+
 
 router.post('/login', (req, res, next) => {
   userModel.findOne({username: req.body.username}, '_id username password sessionID', (err, acc) => {
