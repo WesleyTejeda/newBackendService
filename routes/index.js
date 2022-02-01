@@ -35,7 +35,7 @@ router.post('/signup', (req, res, next) => {
         res.send(err ? err : msg);
       });
     }else{
-      res.send("account already exists")
+      res.send({err: "account already exists"})
     }
   })
 });
@@ -65,5 +65,7 @@ router.post('/auth', (req, res, next) => {
     return res.send({err: 'invalid sessionID'});
   })
 });
+
+
 
 module.exports = router;
