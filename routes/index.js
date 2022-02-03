@@ -26,10 +26,10 @@ router.get('/', function(req, res, next) {
 });
 
 const secretCheck = (req, res, next) => {
-  req.params.key === "pmY6WrA2oO7Vfdd4zpfz97C9aWMLELqv" ? next() : res.json({error: "Access denied to gateway."})
+  req.query.secretKey === "pmY6WrA2oO7Vfdd4zpfz97C9aWMLELqv" ? next() : res.json({error: "Access denied to gateway."})
 }
 
-router.post('/signup/:key', secretCheck(req, res, next), (req, res, next) => {
+router.post('/signup', secretCheck, (req, res, next) => {
   userModel.findOne({username: req.body.username}, "username", (err, acc) =>{
     if(err)
       return res.send(err)
@@ -50,7 +50,7 @@ router.post('/signup/:key', secretCheck(req, res, next), (req, res, next) => {
 });
 
 
-router.post('/login/:key', secretCheck(req, res, next), (req, res, next) => {
+router.post('/login', secretCheck, (req, res, next) => {
   userModel.findOne({username: req.body.username}, '_id username password sessionID', (err, acc) => {
     if (!err && acc) {
       if (md5(req.body.password) == acc.password) return res.send({
@@ -63,7 +63,7 @@ router.post('/login/:key', secretCheck(req, res, next), (req, res, next) => {
   });
 });
 
-router.post('/auth/:key', secretCheck(req, res, next), (req, res, next) => {
+router.post('/auth', secretCheck, (req, res, next) => {
   userModel.findOne({sessionID: req.body.sessionID}, '_id username sessionID', (err, acc) => {
     if (!err && acc) {
       if (req.body.username == acc.username) return res.send({
