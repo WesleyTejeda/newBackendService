@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var db = mongoose.connection;
 var Schema = mongoose.Schema;
 const md5 = require('md5');
+require("dotenv").config();
 
 var crypto = require('crypto');
 const { maxHeaderSize } = require('http');
@@ -26,7 +27,7 @@ router.get('/', function(req, res, next) {
 });
 
 const secretCheck = (req, res, next) => {
-  req.query.secretKey === "pmY6WrA2oO7Vfdd4zpfz97C9aWMLELqv" ? next() : res.json({error: "Access denied to gateway."})
+  req.query.secretKey === process.env.secretKey ? next() : res.json({error: "Access denied to gateway."})
 }
 
 router.post('/signup', secretCheck, (req, res, next) => {
